@@ -1,6 +1,6 @@
 # Cyber Resilience with Intelligent Agents 
 
-Plataforma computacional que considere componentes con licenciamiento tipo “open source” considerando la siguiente distribución.
+Generar una plataforma computacional que considere componentes con licenciamiento tipo “open source” considerando la siguiente distribución.
 
 - **Ingesta**: utilizando (Apache Kafka, Apache NiFi) para orquestar grandes flujos de datos de forma tolerante a fallos.
 - **Procesamiento**: utilizando (Apache Spark) y agentes inteligentes basados en Python PyTorch/TensorFlow para detección y respuesta automatizada de incidentes.
