@@ -1,0 +1,30 @@
+services:
+  owasp-zap:
+    image: owasp/zap2docker-stable
+    container_name: owasp-zap
+    tty: true
+    stdin_open: true
+    volumes:
+      - /lago_de_datos:/data
+    ports:
+      - "8090:8090"  # Exponer puerto opcionalmente si usas la GUI o API REST
+    networks:
+      - security-net
+
+  trivy:
+    image: aquasec/trivy:latest
+    container_name: trivy
+    entrypoint: ["/bin/sh"]  # Para mantener el contenedor en espera o interactivo
+    tty: true
+    stdin_open: true
+    volumes:
+      - /lago_de_datos:/data
+    networks:
+      - security-net
+
+volumes:
+  # No se requiere definición explícita aquí porque montas una ruta del host
+
+networks:
+  security-net:
+    driver: bridge
