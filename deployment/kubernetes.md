@@ -307,4 +307,4 @@ volumes:
    ```
 
 ---
-> By CISO oswaldo.diaz@inegi.org.mx
+> CIMAT - CIMPS 2025 | oswaldo.diaz@inegi.org.mx 
