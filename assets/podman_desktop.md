@@ -1,178 +1,49 @@
-### **Pasos para instalar Podman Desktop**
+# Install Podman 
+## Step 1: Update your system’s package index and upgrade installed packages
 
-#### **1. Verificar los requisitos previos**
-Antes de instalar, asegúrate de que tu sistema cumpla con los siguientes requisitos:
-- **Sistema Operativo**: Windows, macOS o Linux (Distribuciones basadas en Debian, Red Hat, etc.).
-- **Recursos mínimos**:
-  - Procesador moderno compatible con virtualización.
-  - Al menos 2 GB de RAM.
-- **Permisos de administrador/root**: Necesarios para completar la instalación.
+Open a terminal and run:
 
-#### **2. Descargar Podman Desktop**
-**Accede al sitio oficial** de Podman Desktop:  
-   [https://podman.io](https://podman.io).
-   
-En a la sección de descargas y selecciona tu sistema operativo:
-   - **Windows**: Descarga el archivo `.exe`.
-   - **macOS**: Descarga el archivo `.dmg`.
-   - **Linux**: Sigue las instrucciones según tu distribución.
-
-#### **3. Instalación según el sistema operativo**
-
-##### **Windows**
-Ejecutar el archivo descargado (`Podman-Desktop-Installer.exe`).
-Siguir las instrucciones del asistente de instalación:
-   - Acepta los términos de uso.
-   - Elige una ruta de instalación (o usa la predeterminada).
-Finalizar la instalación y reinicia el sistema si es necesario.
-
-##### **macOS**
-Abrir el archivo `.dmg` descargado.
-Arrastrar el icono de **Podman Desktop** a la carpeta **Aplicaciones**.
-Abrir la aplicación desde **Launchpad** y sigue las configuraciones iniciales.
-
-##### **Linux**
-El proceso varía según tu distribución. Aquí tienes ejemplos para las más comunes:
-
-- **Ubuntu/Debian**:
-  ```bash
-  sudo apt update
-  wget https://github.com/containers/podman-desktop/releases/latest/download/podman-desktop-linux.deb
-  sudo apt install ./podman-desktop-linux.deb
-  ```
-
-- **Fedora/Red Hat**:
-  ```bash
-  sudo dnf install https://github.com/containers/podman-desktop/releases/latest/download/podman-desktop-linux.rpm
-  ```
-
-#### **4. Configuración inicial**
-Abrir Podman Desktop.
-Si es la primera vez en utilizar Podman, seleccionar o instalar un backend:
-   - **Linux**: Podman ya estará configurado de forma nativa.
-   - **Windows/macOS**: Es posible que necesites instalar **WSL 2** (Windows) o configurar un entorno de virtualización como Lima (macOS).
-Configurar los recursos (CPU, RAM, almacenamiento) según sea necesario.
-
-#### **5. Probar la instalación**
-Abrir Podman Desktop y crea un contenedor de prueba:
-   - Desde la interfaz gráfica, selecciona **New Container**.
-   - Elige una imagen base como `nginx` o `alpine`.
-Verificar que el contenedor se esté ejecutando correctamente:
-   - Puedes acceder al log desde Podman Desktop.
-   - Accede al contenedor si es un servidor web, por ejemplo, en el navegador.
-
-______________
-
-### ¿Qué es YAML?  
-YAML (YAML Ain't Markup Language) es un formato de serialización de datos diseñado para ser legible por humanos. Es ampliamente utilizado para definir configuraciones debido a su simplicidad y claridad. YAML utiliza una estructura basada en sangrías y no requiere llaves ni corchetes como otros formatos como JSON o XML.
-
-### Sintaxis de YAML  
-- **Estructura jerárquica**: Se organiza por niveles de sangría.
-- **Claves y valores**: Las claves se separan de los valores mediante `:`.
-- **Listas**: Se definen usando guiones (`-`).
-- **Comentarios**: Se escriben con `#`.
-- **Bloques literales**: Los valores multilinea se definen con `|` o `>`.
-
-Ejemplo básico:
-```yaml
-persona:
-  nombre: "Oswaldo"
-  edad: 50
-  habilidades:
-    - ciberseguridad
-    - privacidad de datos
-    - normatividad en TICs
-  contacto:
-    correo: oswaldo.diaz@inegi.org.mx
-    teléfono: "+52 449 910 53 00"
+```bash
+sudo apt update
+sudo apt upgrade -y
 ```
 
-### Uso de YAML en el contexto de contenerización  
-En el ámbito de la contenerización, YAML se utiliza ampliamente para describir configuraciones en herramientas como Docker Compose y Podman Compose. Estas herramientas permiten definir múltiples servicios en un solo archivo, facilitando la orquestación de contenedores.
+This ensures you have the latest package listings and security updates before installing new software. ([idroot.us][1], [docs.vultr.com][2])
 
-#### Ejemplo con Docker Compose  
-Archivo `docker-compose.yml` para levantar una aplicación web y una base de datos:  
-```yaml
-version: '3.8'
-services:
-  web:
-    image: nginx:latest
-    ports:
-      - "8080:80"
-    volumes:
-      - ./html:/usr/share/nginx/html
-    depends_on:
-      - db
+## Step 2: Install Podman
 
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
-    volumes:
-      - db_data:/var/lib/postgresql/data
+With your system up‑to‑date, install Podman directly from Ubuntu’s official repositories:
 
-volumes:
-  db_data:
+```bash
+sudo apt install -y podman
 ```
 
-**Versión**: Define la versión del esquema YAML para Docker Compose. En este caso, `3.8`.
-**Servicios**: Agrupa los contenedores que se usarán:
-   - `web`: Define un servicio que usa la imagen de NGINX y mapea el puerto 8080 en el host al 80 en el contenedor.
-   - `db`: Configura una base de datos PostgreSQL con variables de entorno para el usuario, contraseña y base de datos.
-**Volúmenes**: Crea un volumen persistente para almacenar los datos de PostgreSQL.
+Since Ubuntu 20.10, Podman has been included in the default package sources, so this single command pulls in everything you need. ([idroot.us][1])
 
-#### Ejemplo con Podman Compose  
-Podman Compose usa un archivo similar al de Docker Compose. Para el mismo caso:
-```yaml
-version: '3.8'
-services:
-  web:
-    image: nginx:latest
-    ports:
-      - "8080:80"
-    volumes:
-      - ./html:/usr/share/nginx/html
-    depends_on:
-      - db
+## Step 3: Verify the installation
 
-  db:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydatabase
-    volumes:
-      - db_data:/var/lib/postgresql/data
+Check that Podman installed correctly by querying its version:
 
-volumes:
-  db_data:
+```bash
+podman --version
 ```
 
-La sintaxis es idéntica porque Podman Compose busca ser compatible con Docker Compose. Ambos generan y gestionan contenedores usando el mismo estándar YAML.
+You should see output like `podman version 4.x.x` confirming the install. ([idroot.us][1])
 
+## Step 4: Run a test container
 
-### **Referencias bibliográficas**
+Finally, test Podman by running a simple OCI container:
 
-> Red Hat. (2023). What is Podman?. Red Hat. Recuperado de https://www.redhat.com/en/topics/containers/what-is-podman
+```bash
+podman run --rm docker.io/library/ubuntu:24.04 echo "Hello from Podman!"
+```
 
-> Podman.io. (2023). Podman Desktop Documentation. Recuperado de https://podman.io/getting-started/installation
+You should see `Hello from Podman!` printed, demonstrating that Podman can pull and run containers rootlessly by default. ([devtutorial.io][3])
 
-> Graba, J. (2022). Managing containers with Podman: A step-by-step guide for developers and sysadmins. TechPress.
+---
 
-> Jain, R. (2021). Containerization with Podman and Docker: A practical guide to modern container technologies. Springer.
+Once these steps are complete, Podman is ready to use on your Ubuntu 24.04 system. You can explore additional features such as `podman pod`, `podman build`, or integrating with Docker Compose using `podman-compose`.
 
-> IBM Cloud. (2023). Podman vs Docker: Key differences explained. IBM Knowledge Center. Recuperado de https://www.ibm.com/cloud/blog/podman-vs-docker
-
-> Docker Inc. (2023). *Overview of Docker Compose*. Recuperado de https://docs.docker.com/compose/
-
-> Podman Team. (2023). *Podman Compose User Guide*. Recuperado de https://podman.io/
-
-> Ben-Kiki, O., Evans, C., & döt Net, I. (2009). *YAML Ain't Markup Language (YAML™) Version 1.2*. Recuperado de https://yaml.org/spec/1.2/spec.html
-
-> Turnbull, J. (2018). *The Docker Book: Containerization is the New Virtualization*. Independently Published.
-
-> Kelsey, C. (2020). *Programming Containers: Understanding Docker and YAML for Orchestration*. O'Reilly Media.
-_____________________________
-> CIMAT - CIMPS 2025 | oswaldo.diaz@inegi.org.mx
+[1]: https://idroot.us/install-podman-ubuntu-24-04/?utm_source=chatgpt.com "How To Install Podman on Ubuntu 24.04 LTS - idroot"
+[2]: https://docs.vultr.com/how-to-install-podman-on-ubuntu-24-04?utm_source=chatgpt.com "How to Install Podman on Ubuntu 24.04 - Vultr"
+[3]: https://devtutorial.io/how-to-install-and-use-podman-on-ubuntu-24-04-p3481.html?utm_source=chatgpt.com "How to Install and Use Podman on Ubuntu 24.04 - Devtutorial"
