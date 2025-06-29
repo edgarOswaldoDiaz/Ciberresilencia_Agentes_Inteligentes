@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  pytorch:
+    image: pytorch/pytorch:latest
+    container_name: pytorch_container
+    volumes:
+      - /lago_de_datos:/workspace/data
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+    networks:
+      - ai_network
+
+  tensorflow:
+    image: tensorflow/tensorflow:latest
+    container_name: tensorflow_container
+    volumes:
+      - /lago_de_datos:/workspace/data
+    working_dir: /workspace
+    tty: true
+    stdin_open: true
+    networks:
+      - ai_network
+
+  spark:
+    image: bitnami/spark:latest
+    container_name: spark_container
+    environment:
+      - SPARK_MODE=standalone
+    volumes:
+      - /lago_de_datos:/data
+    networks:
+      - ai_network
+    ports:
+      - "8080:8080"   # UI
+      - "7077:7077"   # Spark master port
+
+networks:
+  ai_network:
+    driver: bridge
