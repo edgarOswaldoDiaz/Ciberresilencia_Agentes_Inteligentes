@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.1
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - /lago_de_datos/zookeeper-data:/var/lib/zookeeper/data
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.1
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - /lago_de_datos/kafka-data:/var/lib/kafka/data
+
+  nifi:
+    image: apache/nifi:latest
+    container_name: nifi
+    ports:
+      - "8080:8080"
+    environment:
+      NIFI_WEB_HTTP_PORT: 8080
+    volumes:
+      - /lago_de_datos/nifi-data:/opt/nifi/nifi-current/data
+    depends_on:
+      - kafka
+
+  nifi-registry:
+    image: apache/nifi-registry:latest
+    container_name: nifi-registry
+    ports:
+      - "18080:18080"
+    environment:
+      NIFI_REGISTRY_HTTP_PORT: 18080
+    volumes:
+      - /lago_de_datos/nifi-registry-data:/opt/nifi-registry/data
+    depends_on:
+      - nifi
+
+volumes:
+  zookeeper-data:
+    external: true
+  kafka-data:
+    external: true
+  nifi-data:
+    external: true
+  nifi-registry-data:
+    external: true
+
+networks:
+  default:
+    driver: bridge
