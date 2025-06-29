@@ -17,9 +17,6 @@ We need to generate a computational platform that utilizes open-source licensed 
 - **Security**:Perform penetration testing and vulnerability analysis of containerized environments with OWASP ZAP and Trivy.
 
 - **GIT**: Generate Automated CI/CD Pipelines based on Git repositories (GitLab/GitHub) with distributed processing flows, implementing DevSecOps & DataSecOps processes.
-
-- **Repository Container**: Sign container images in a "registry" repository using Notary and Cosign.
-
 ________________
 > CIMAT - CIMPS 2025 | contact oswaldo.diaz@inegi.org.mx  
 
