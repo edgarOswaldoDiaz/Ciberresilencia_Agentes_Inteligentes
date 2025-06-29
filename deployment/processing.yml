@@ -1,7 +1,3 @@
-# Contenedor para procesamiento de datos y entrenamiento 
-# Utilizar NVIDIA Cuda Toolkit versión 12.X
-version: "3.9"
-
 services:
   pytorch:
     image: pytorch/pytorch:latest
