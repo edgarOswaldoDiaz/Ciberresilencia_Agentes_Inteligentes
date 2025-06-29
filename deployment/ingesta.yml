@@ -1,4 +1,4 @@
-# Contenedor para procesamiento de datos
+# Contenedor para ingesta en el lago de datos
 version: '3.8'
 
 services:
