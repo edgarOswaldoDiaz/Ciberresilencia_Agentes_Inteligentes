@@ -1,0 +1,72 @@
+# Contenedor para almacenamiento en el lago de datos
+version: "3.8"
+
+services:
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: minio
+    volumes:
+      - /lago_de_datos/minio:/data
+    ports:
+      - "9000:9000"       # API
+      - "9001:9001"       # Consola Web
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+
+  hdfs-namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: hdfs-namenode
+    environment:
+      - CLUSTER_NAME=hadoop-cluster
+    volumes:
+      - /lago_de_datos/hdfs/namenode:/hadoop/dfs/name
+    ports:
+      - "9870:9870"
+    depends_on:
+      - hdfs-datanode
+    restart: unless-stopped
+
+  hdfs-datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: hdfs-datanode
+    environment:
+      - CLUSTER_NAME=hadoop-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://hdfs-namenode:9000
+    volumes:
+      - /lago_de_datos/hdfs/datanode:/hadoop/dfs/data
+    ports:
+      - "9864:9864"
+    depends_on:
+      - hdfs-namenode
+    restart: unless-stopped
+
+  openmetadata:
+    image: openmetadata/openmetadata:latest
+    container_name: openmetadata
+    environment:
+      - OPENMETADATA_DATABASE_HOST=postgres
+      - OPENMETADATA_DATABASE_PORT=5432
+      - OPENMETADATA_DATABASE_USERNAME=openmetadata_user
+      - OPENMETADATA_DATABASE_PASSWORD=openmetadata_pass
+      - OPENMETADATA_DATABASE_NAME=openmetadata_db
+    volumes:
+      - /lago_de_datos/openmetadata:/openmetadata
+    ports:
+      - "8585:8585"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=openmetadata_user
+      - POSTGRES_PASSWORD=openmetadata_pass
+      - POSTGRES_DB=openmetadata_db
+    volumes:
+      - /lago_de_datos/postgres:/var/lib/postgresql/data
+    restart: unless-stopped
